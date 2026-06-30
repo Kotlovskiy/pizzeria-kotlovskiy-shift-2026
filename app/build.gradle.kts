@@ -40,6 +40,31 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.ui)
+    implementation(projects.core.network)
+    implementation(projects.core.errors)
+    implementation(projects.core.storage)
+
+    implementation(projects.auth.data)
+    implementation(projects.auth.domain)
+    implementation(projects.auth.presentation)
+
+    implementation(projects.catalog.data)
+    implementation(projects.catalog.domain)
+    implementation(projects.catalog.presentation)
+
+    implementation(projects.cart.data)
+    implementation(projects.cart.domain)
+    implementation(projects.cart.presentation)
+
+    implementation(projects.orders.data)
+    implementation(projects.orders.domain)
+    implementation(projects.orders.presentation)
+
+    implementation(projects.profile.data)
+    implementation(projects.profile.domain)
+    implementation(projects.profile.presentation)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
