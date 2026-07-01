@@ -10,29 +10,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
-class AppDataStore(context: Context) {
+class AppDataStore(context: Context) : IDataStore {
 
     private val dataStore = create {
         context.preferencesDataStoreFile(DATA_STORE_NAME)
     }
 
-    suspend fun getString(key: String): String? {
+    override suspend fun getString(key: String): String? {
         return dataStore.data.firstOrNull()?.let { it[getPrefKey(key)] }
     }
 
-    suspend fun setString(key: String, value: String) {
+    override suspend fun setString(key: String, value: String) {
         dataStore.edit {
             it[getPrefKey(key)] = value
         }
     }
 
-    suspend fun clearString(key: String) {
+    override suspend fun clearString(key: String) {
         dataStore.edit {
             it.remove(getPrefKey(key))
         }
     }
 
-    fun observeString(key: String): Flow<String?> {
+    override fun observeString(key: String): Flow<String?> {
         return dataStore.data.map { it[getPrefKey(key)] }
     }
 
