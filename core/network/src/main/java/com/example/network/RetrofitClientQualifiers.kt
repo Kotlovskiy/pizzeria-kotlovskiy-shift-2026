@@ -4,8 +4,8 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class AuthorizedRetrofitClient
+internal annotation class AuthorizedRetrofitClient
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class UnauthorizedRetrofitClient
+internal annotation class UnauthorizedRetrofitClient
