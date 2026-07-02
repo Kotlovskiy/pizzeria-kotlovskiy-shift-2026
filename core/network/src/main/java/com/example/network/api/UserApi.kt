@@ -9,9 +9,9 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 
 interface UserApi {
-    @PATCH
-    fun updateProfile(@Body updateProfileDto: UpdateProfileDto): Response<UpdateProfileResponse>
+    @PATCH("api/users/profile")
+    suspend fun updateProfile(@Body updateProfileDto: UpdateProfileDto): Response<UpdateProfileResponse>
 
-    @GET
-    fun getSession(): Response<SessionResponse>
+    @GET("api/users/session")
+    suspend fun getSession(): Response<SessionResponse>
 }

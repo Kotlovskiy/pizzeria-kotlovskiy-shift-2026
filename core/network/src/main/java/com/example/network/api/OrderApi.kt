@@ -5,16 +5,18 @@ import com.example.network.model.CancelPizzaOrderDto
 import com.example.network.model.PizzaOrderResponse
 import com.example.network.model.PizzaOrdersResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface OrderApi {
-    @GET
-    fun getAllOrders() : Response<PizzaOrdersResponse>
+    @GET("api/pizza/orders")
+    suspend fun getAllOrders() : Response<PizzaOrdersResponse>
 
-    @GET
-    fun getOrder(orderId: String) : Response<PizzaOrderResponse>
+    @GET("api/pizza/orders/{orderId}")
+    suspend fun getOrder(@Path("orderId") orderId: String) : Response<PizzaOrderResponse>
 
-    @PUT
-    fun cancelOrder(cancelPizzaOrderDto: CancelPizzaOrderDto) : Response<BaseResponse>
+    @PUT("api/pizza/orders/cancel")
+    suspend fun cancelOrder(@Body cancelPizzaOrderDto: CancelPizzaOrderDto) : Response<BaseResponse>
 }

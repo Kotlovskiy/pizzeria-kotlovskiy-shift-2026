@@ -9,9 +9,9 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST
-    fun createOtp(@Body createOtpDto: CreateOtpDto): Response<OtpResponse>
+    @POST("api/auth/otp")
+    suspend fun createOtp(@Body createOtpDto: CreateOtpDto): Response<OtpResponse>
 
-    @POST
-    fun signIn(@Body signInDto: SignInDto): Response<SignInResponse>
+    @POST("api/users/signin")
+    suspend fun signIn(@Body signInDto: SignInDto): Response<SignInResponse>
 }
