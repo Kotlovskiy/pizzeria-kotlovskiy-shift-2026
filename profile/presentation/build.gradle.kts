@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.presentation"
+    namespace = "com.example.profile.presentation"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1

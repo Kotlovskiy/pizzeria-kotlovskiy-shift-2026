@@ -7,12 +7,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
+import com.example.catalog.presentation.catalog.CatalogDestination
+import com.example.catalog.presentation.catalog.CatalogScreen
+import com.example.catalog.presentation.pizza.PizzaDestination
+import com.example.catalog.presentation.pizza.PizzaScreen
+import com.example.catalog.presentation.pizza.PizzaScreenViewModel
 import com.example.pizzeria.ui.theme.PizzeriaTheme
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,10 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PizzeriaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Navigation(Modifier.fillMaxSize().padding(innerPadding))
                 }
             }
         }
@@ -31,17 +38,34 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun Navigation(modifier: Modifier = Modifier) {
+    val backStack = rememberNavBackStack(CatalogDestination)
+    NavDisplay(
+        backStack = backStack,
+        modifier = modifier,
+        onBack = { backStack.removeLastOrNull() },
+        entryProvider = entryProvider {
+            entry<CatalogDestination> {
+                CatalogScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    toPizzaScreen = { id ->
+                        backStack.add(PizzaDestination(pizzaId = id))
+                    }
+                )
+            }
+            entry<PizzaDestination> { key ->
+                val viewModel = hiltViewModel<PizzaScreenViewModel, PizzaScreenViewModel.Factory>(
+                    key = key.hashCode().toString() + UUID.randomUUID().toString(),
+                    creationCallback = { factory ->
+                        factory.create(key)
+                    }
+                )
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PizzeriaTheme {
-        Greeting("Android")
-    }
+                PizzaScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    viewModel = viewModel
+                )
+            }
+        }
+    )
 }
