@@ -1,4 +1,4 @@
-package com.example.network
+package com.example.network.qualifiers
 
 import javax.inject.Qualifier
 
