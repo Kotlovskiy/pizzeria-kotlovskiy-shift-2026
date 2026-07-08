@@ -33,8 +33,6 @@ class PizzaScreenViewModel @AssistedInject constructor(
     @Assisted private val pizzaDestination: PizzaDestination,
     private val repository: PizzaRepository
 ) : ViewModel() {
-    private val id: String = pizzaDestination.pizzaId
-    private val pizza: Pizza? = pizzaDestination.pizza
     private val _state = MutableStateFlow<PizzaScreenState>(Initial)
     val state = _state.asStateFlow()
 
@@ -53,84 +51,105 @@ class PizzaScreenViewModel @AssistedInject constructor(
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO + handler) {
             _state.update { LoadingContent }
-            val result = repository.getPizzaInfoById(id)
+            val result = repository.getPizzaInfoById(pizzaDestination.pizzaId)
             _state.update {
                 Content(
                     pizzaInfo = result,
                     allToppings = result.toppings,
-                    selectedDough = pizza?.dough ?: result.doughs.first { it.type == Dough.THIN },
-                    selectedSize = pizza?.size ?: result.sizes.first { it.size == Size.SMALL },
-                    selectedToppings = pizza?.toppings?.map { it.type } ?: listOf(),
-                    isEditMode = pizza != null
+                    selectedDough = pizzaDestination.pizza?.dough ?: result.doughs.first {
+                        it.type == Dough.THIN
+                    },
+                    selectedSize = pizzaDestination.pizza?.size ?: result.sizes.first {
+                        it.size == Size.SMALL
+                    },
+                    selectedToppings = pizzaDestination.pizza?.toppings?.map { it.type } ?: listOf(),
+                    isEditMode = pizzaDestination.pizza != null
                 )
             }
         }
     }
 
     fun updateSize(size: Size) {
-        try {
-            _state.update {
-                (it as? Content)?.copy(
-                    selectedSize = it.pizzaInfo.sizes.first { sizeInfo ->
-                        sizeInfo.size == size
-                    }
-                ) ?: it
-            }
-        } catch (_: Exception) { }
+        if (_state.value !is Content) return
+        _state.update {
+            (it as Content).copy(
+                selectedSize = it.pizzaInfo.sizes.first { sizeInfo ->
+                    sizeInfo.size == size
+                }
+            )
+        }
     }
 
     fun updateToppings(ingredient: Ingredient) {
+        if (_state.value !is Content) return
         _state.update {
-            (it as? Content)?.copy(
+            (it as Content).copy(
                 selectedToppings =
-                    if(it.selectedToppings.indexOfFirst { item -> item == ingredient  } == -1) {
-                        it.selectedToppings + ingredient
-                    } else {
+                    if(inToppings(it.selectedToppings, ingredient)) {
                         it.selectedToppings.filter { item -> item != ingredient }
+                    } else {
+                        it.selectedToppings + ingredient
                     }
-            ) ?: it
+            )
         }
     }
 
-    fun clickButton() {
+    fun clickAddUpdateButton() {
         viewModelScope.launch(Dispatchers.IO + handler) {
-            _state.update { (it as? Content)?.copy(loading = true) ?: it }
-            (_state.value as? Content)?.let { currentState ->
-                if (pizza == null) {
-                    repository.addPizza(
-                        Pizza(
-                            id = currentState.pizzaInfo.id,
-                            image = currentState.pizzaInfo.image,
-                            title = currentState.pizzaInfo.title,
-                            size = currentState.selectedSize,
-                            dough = currentState.selectedDough,
-                            toppings = currentState.allToppings.filter {
-                                it.type in currentState.selectedToppings
-                            },
-                            count = 1
-                        )
-                    )
-                } else {
-                    repository.updatePizza(
-                        pizza = pizza,
-                        size = if (pizza.size.size != currentState.selectedSize.size)
-                            currentState.selectedSize
-                        else null,
-                        dough = if (pizza.dough.type != currentState.selectedDough.type)
-                            currentState.selectedDough
-                        else null,
-                        toppings = if (
-                            pizza.toppings.map { it.type }.toSet() !=
-                            currentState.selectedToppings.toSet()
-                        )
-                            pizza.toppings.filter { it.type in currentState.selectedToppings }
-                        else null
-                    )
-                }
+            val currentState = _state.value as? Content ?: return@launch
 
-                _state.update { Navigation }
+            _state.update { (it as Content).copy(loading = true) }
+
+            if (pizzaDestination.pizza == null) {
+                addPizza(currentState)
+            } else {
+                updatePizza(currentState, pizzaDestination.pizza)
             }
+
+            _state.update { Navigation }
         }
+    }
+
+    private suspend fun addPizza(currentState: Content) {
+        repository.addPizza(
+            Pizza(
+                id = currentState.pizzaInfo.id,
+                image = currentState.pizzaInfo.image,
+                title = currentState.pizzaInfo.title,
+                size = currentState.selectedSize,
+                dough = currentState.selectedDough,
+                toppings = currentState.allToppings.filter {
+                    it.type in currentState.selectedToppings
+                }
+            )
+        )
+    }
+
+    private suspend fun updatePizza(
+        currentState: Content,
+        pizza: Pizza
+    ) {
+        repository.updatePizza(
+            pizza = pizza,
+            size = currentState.selectedSize.takeIf {
+                pizza.size.size != it.size
+            },
+            dough = currentState.selectedDough.takeIf {
+                pizza.dough.type != it.type
+            },
+            toppings = pizza.toppings
+                .filter { it.type in currentState.selectedToppings }
+                .takeIf {
+                    it.toSet() != pizza.toppings.toSet()
+                }
+        )
+    }
+
+    private fun inToppings(
+        selectedToppings: List<Ingredient>,
+        ingredient: Ingredient
+    ): Boolean {
+        return selectedToppings.indexOfFirst { item -> item == ingredient  } == -1
     }
 
     @AssistedFactory

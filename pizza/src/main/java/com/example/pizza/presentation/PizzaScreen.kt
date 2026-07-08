@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,7 +74,7 @@ fun PizzaScreen(
                 },
                 allToppings = (state as Content).allToppings,
                 selectedToppings = (state as Content).selectedToppings,
-                onButtonClick = { viewModel.clickButton() },
+                onButtonClick = { viewModel.clickAddUpdateButton() },
                 buttonText = getButtonText((state as Content).isEditMode),
                 modifier = modifier.loadingOverlay((state as Content).loading)
             )

@@ -10,5 +10,5 @@ data class Pizza(
     val size: SizeInfo,
     val dough: DoughInfo,
     val toppings: List<Topping>,
-    val count: Int
+    val count: Int = 1
 )
