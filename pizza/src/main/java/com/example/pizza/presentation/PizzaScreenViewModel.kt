@@ -149,7 +149,7 @@ class PizzaScreenViewModel @AssistedInject constructor(
         selectedToppings: List<Ingredient>,
         ingredient: Ingredient
     ): Boolean {
-        return selectedToppings.indexOfFirst { item -> item == ingredient  } == -1
+        return selectedToppings.indexOfFirst { item -> item == ingredient  } != -1
     }
 
     @AssistedFactory
