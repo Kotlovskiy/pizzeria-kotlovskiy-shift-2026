@@ -26,6 +26,7 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.storage)
     implementation(projects.catalog.domain)
+    implementation(projects.keys)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.hilt.android)

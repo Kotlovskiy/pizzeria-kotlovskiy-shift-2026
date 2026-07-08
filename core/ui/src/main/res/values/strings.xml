@@ -4,4 +4,7 @@
     <string name="try_again">Попробовать снова</string>
     <string name="smt_went_wrong">Что-то пошло не так</string>
     <string name="server_not_available">Сервер временно не доступен. Попробуйте позже</string>
+
+    <string name="pizza_icon">Иконка пиццы</string>
+    <string name="back_button">Кнопка назад</string>
 </resources>
