@@ -1,0 +1,35 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
+}
+
+android {
+    namespace = "com.example.network"
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
+
+    defaultConfig {
+        minSdk = 28
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+}
+
+dependencies {
+    implementation(projects.core.storage)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.converter)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.androidx.core.ktx)
+}

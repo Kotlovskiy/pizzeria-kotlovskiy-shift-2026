@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.example.pizzeria"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
@@ -17,8 +19,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -40,6 +40,32 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.ui)
+
+    implementation(projects.auth.data)
+    implementation(projects.auth.presentation)
+
+    implementation(projects.catalog.data)
+    implementation(projects.catalog.presentation)
+
+    implementation(projects.cart.data)
+    implementation(projects.cart.presentation)
+
+    implementation(projects.orders.data)
+    implementation(projects.orders.presentation)
+
+    implementation(projects.profile.data)
+    implementation(projects.profile.presentation)
+
+    implementation(projects.pizza)
+
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

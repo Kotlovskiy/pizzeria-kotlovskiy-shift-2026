@@ -1,0 +1,32 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = "com.example.storage"
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
+
+    defaultConfig {
+        minSdk = 28
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+}
+
+dependencies {
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.tink.android)
+
+    implementation(libs.androidx.core.ktx)
+}
