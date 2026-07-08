@@ -33,6 +33,7 @@ import com.example.ui.R.string.try_again
 import com.example.ui.errorContent.NoInternetContent
 import com.example.ui.errorContent.ServerErrorContent
 import com.example.ui.errorContent.SmtWentWrongContent
+import com.example.ui.loadingOverlay
 
 @Composable
 fun PizzaScreen(
@@ -43,24 +44,11 @@ fun PizzaScreen(
 
     when (state) {
         is Error -> {
-            when ((state as Error).error) {
-                NoInternet -> NoInternetContent(
-                    text = stringResource(check_internet_and_retry),
-                    buttonText = stringResource(try_again),
-                    onClickRetry = { viewModel.loadData() },
-                    modifier = modifier.padding(horizontal = 32.dp)
-                )
-                ServerError -> ServerErrorContent(
-                    stringResource(server_not_available),
-                    modifier = modifier.padding(horizontal = 32.dp)
-                )
-                SmtWentWrong -> SmtWentWrongContent(
-                    text = stringResource(smt_went_wrong),
-                    buttonText = stringResource(try_again),
-                    onClickRetry = { viewModel.loadData() },
-                    modifier = modifier.padding(horizontal = 32.dp)
-                )
-            }
+            Error(
+                state = state as Error,
+                onClickRetry = { viewModel.loadData() },
+                modifier = modifier
+            )
         }
         Initial -> {
             viewModel.loadData()
@@ -75,61 +63,22 @@ fun PizzaScreen(
                 image = (state as Content).pizzaInfo.image,
                 imageSize = 220.dp,
                 name = (state as Content).pizzaInfo.title,
-                diameter = when ((state as Content).selectedSize.size) {
-                    Size.SMALL -> 30
-                    Size.MEDIUM -> 40
-                    Size.LARGE -> 50
-                },
-                dough =
-                    if ((state as Content).selectedDough.type == Dough.THIN)
-                        stringResource(thin_dough)
-                    else
-                        stringResource(thick_dough),
+                diameter = getDiameter((state as Content).selectedSize.size) ,
+                dough = getDough((state as Content).selectedDough.type),
                 description = (state as Content).pizzaInfo.description,
-                selectedTabIndex =
-                    when ((state as Content).selectedSize.size) {
-                        Size.SMALL -> 0
-                        Size.MEDIUM -> 1
-                        Size.LARGE -> 2
-                    },
-                tabs =
-                    listOf(
-                        stringResource(small_size),
-                        stringResource(medium_size),
-                        stringResource(large_size)
-                    ),
-                onTabClick =
-                    { selected ->
-                        when (selected) {
-                            0 -> viewModel.updateSize(Size.SMALL)
-                            1 -> viewModel.updateSize(Size.MEDIUM)
-                            2 -> viewModel.updateSize(Size.LARGE)
-                        }
-                    },
-                onToppingClick =
-                    { ingredient ->
-                        viewModel.updateToppings(ingredient)
-                    },
+                selectedTabIndex = getTabIndex((state as Content).selectedSize.size),
+                tabs = getTabsName(),
+                onTabClick = { selected ->
+                    onTabClick(index = selected) { viewModel.updateSize(it) }
+                },
+                onToppingClick = { ingredient ->
+                    viewModel.updateToppings(ingredient)
+                },
                 allToppings = (state as Content).allToppings,
                 selectedToppings = (state as Content).selectedToppings,
                 onButtonClick = { viewModel.clickButton() },
-                buttonText =
-                    if ((state as Content).isEditMode)
-                        stringResource(save)
-                    else
-                        stringResource(add_to_cart),
-                modifier = modifier
-                    .then(
-                        if ((state as Content).loading) {
-                            Modifier
-                                .drawWithContent {
-                                    drawContent()
-                                    drawRect(color = Black, alpha = 0.2f)
-                                }
-                        } else {
-                            Modifier
-                        }
-                    )
+                buttonText = getButtonText((state as Content).isEditMode),
+                modifier = modifier.loadingOverlay((state as Content).loading)
             )
             if ((state as Content).loading) {
                 LoadingContent(
@@ -141,3 +90,71 @@ fun PizzaScreen(
         PizzaScreenState.Navigation -> {}
     }
 }
+
+@Composable
+fun Error(
+    state: Error,
+    onClickRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when (state.error) {
+        NoInternet -> NoInternetContent(
+            text = stringResource(check_internet_and_retry),
+            buttonText = stringResource(try_again),
+            onClickRetry = onClickRetry,
+            modifier = modifier.padding(horizontal = 32.dp)
+        )
+        ServerError -> ServerErrorContent(
+            stringResource(server_not_available),
+            modifier = modifier.padding(horizontal = 32.dp)
+        )
+        SmtWentWrong -> SmtWentWrongContent(
+            text = stringResource(smt_went_wrong),
+            buttonText = stringResource(try_again),
+            onClickRetry = onClickRetry,
+            modifier = modifier.padding(horizontal = 32.dp)
+        )
+    }
+}
+
+fun getDiameter(size: Size) = when (size) {
+    Size.SMALL -> 30
+    Size.MEDIUM -> 40
+    Size.LARGE -> 50
+}
+
+@Composable
+fun getDough(dough: Dough) = if (dough == Dough.THIN)
+    stringResource(thin_dough)
+else
+    stringResource(thick_dough)
+
+fun getTabIndex(size: Size) = when (size) {
+    Size.SMALL -> 0
+    Size.MEDIUM -> 1
+    Size.LARGE -> 2
+}
+
+@Composable
+fun getTabsName() = listOf(
+    stringResource(small_size),
+    stringResource(medium_size),
+    stringResource(large_size)
+)
+
+fun onTabClick(
+    index: Int,
+    action: (Size) -> Unit
+) {
+    when (index) {
+        0 -> action(Size.SMALL)
+        1 -> action(Size.MEDIUM)
+        2 -> action(Size.LARGE)
+    }
+}
+
+@Composable
+fun getButtonText(isEdit: Boolean) = if (isEdit)
+    stringResource(save)
+else
+    stringResource(add_to_cart)
