@@ -42,7 +42,5 @@ dependencies {
 
     implementation(libs.androidx.navigation3.runtime)
 
-    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
 }
