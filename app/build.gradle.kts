@@ -67,6 +67,8 @@ dependencies {
     implementation(projects.profile.domain)
     implementation(projects.profile.presentation)
 
+    implementation(projects.pizza)
+
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)

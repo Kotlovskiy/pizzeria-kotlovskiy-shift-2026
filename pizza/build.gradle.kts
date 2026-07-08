@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.catalog.presentation"
+    namespace = "com.example.pizza"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -28,13 +28,22 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
-    implementation(projects.catalog.domain)
+    implementation(projects.core.errors)
+    implementation(projects.keys)
+
+    implementation(projects.core.network)
+    implementation(projects.core.storage)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.grid.compose)
+
+    implementation(libs.bundles.coil)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -42,7 +51,5 @@ dependencies {
 
     implementation(libs.androidx.navigation3.runtime)
 
-    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
 }

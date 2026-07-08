@@ -1,38 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pizza_icon">Иконка пиццы</string>
     <string name="price">от %1$d ₽</string>
-    <string name="parameters">%1$d см, %2$s тесто</string>
-    <string name="add_toppings">Добавить по вкусу</string>
-    <string name="topping_icon">Иконка добавки</string>
-    <string name="topping_price">%1$d ₽</string>
-
-    <string name="ingredient_pineapple">Ананас</string>
-    <string name="ingredient_mozzarella">Моцарелла</string>
-    <string name="ingredient_pepperoni">Пепперони</string>
-    <string name="ingredient_green_pepper">Зелёный перец</string>
-    <string name="ingredient_mushrooms">Грибы</string>
-    <string name="ingredient_basil">Базилик</string>
-    <string name="ingredient_cheddar">Чеддер</string>
-    <string name="ingredient_parmesan">Пармезан</string>
-    <string name="ingredient_feta">Фета</string>
-    <string name="ingredient_ham">Ветчина</string>
-    <string name="ingredient_pickle">Огурец</string>
-    <string name="ingredient_tomato">Помидор</string>
-    <string name="ingredient_bacon">Бекон</string>
-    <string name="ingredient_onion">Лук</string>
-    <string name="ingredient_chile">Перец чили</string>
-    <string name="ingredient_shrimp">Креветки</string>
-    <string name="ingredient_chicken_fillet">Куриное филе</string>
-    <string name="ingredient_meatballs">Фрикадельки</string>
-
-    <string name="thin_dough">традиционное</string>
-    <string name="thick_dough">толстое</string>
-
-    <string name="small_size">Маленькая</string>
-    <string name="medium_size">Средняя</string>
-    <string name="large_size">Большая</string>
-    
-    <string name="add_to_cart">Добавить в корзину</string>
-    <string name="save">Сохранить</string>
 </resources>

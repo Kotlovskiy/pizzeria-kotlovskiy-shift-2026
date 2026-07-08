@@ -13,11 +13,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.example.catalog.presentation.catalog.CatalogDestination
-import com.example.catalog.presentation.catalog.CatalogScreen
-import com.example.catalog.presentation.pizza.PizzaDestination
-import com.example.catalog.presentation.pizza.PizzaScreen
-import com.example.catalog.presentation.pizza.PizzaScreenViewModel
+import com.example.catalog.presentation.CatalogDestination
+import com.example.catalog.presentation.CatalogScreen
+import com.example.pizza.presentation.PizzaDestination
+import com.example.pizza.presentation.PizzaScreen
+import com.example.pizza.presentation.PizzaScreenViewModel
 import com.example.pizzeria.ui.theme.PizzeriaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID

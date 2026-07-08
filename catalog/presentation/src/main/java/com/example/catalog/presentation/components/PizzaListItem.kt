@@ -10,6 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.catalog.presentation.R
+import com.example.ui.components.PizzaDescription
+import com.example.ui.components.PizzaImage
+import com.example.ui.components.PizzaName
+import com.example.ui.components.PizzaPrice
 
 @Composable
 fun PizzaListItem(
